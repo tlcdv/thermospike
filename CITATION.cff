@@ -1,0 +1,53 @@
+cff-version: 1.2.0
+message: "If you use thermospike in your research, please cite it as below."
+title: "thermospike: stochastic spiking neurons that sample, with the cost of every sample"
+type: software
+authors:
+  - family-names: Romero
+    given-names: Cesar
+    orcid: "https://orcid.org/0009-0005-9538-9390"
+version: 0.1.0
+license: MIT
+repository-code: "https://github.com/tlcdv/thermospike"
+keywords:
+  - thermodynamic computing
+  - probabilistic computing
+  - p-bit
+  - neuromorphic engineering
+  - spiking neural network
+  - neural sampling
+  - Boltzmann machine
+references:
+  - type: article
+    authors:
+      - family-names: Buesing
+        given-names: Lars
+      - family-names: Bill
+        given-names: Johannes
+      - family-names: Nessler
+        given-names: Bernhard
+      - family-names: Maass
+        given-names: Wolfgang
+    title: "Neural dynamics as sampling: a model for stochastic computation in recurrent networks of spiking neurons"
+    journal: "PLoS Computational Biology"
+    volume: 7
+    issue: 11
+    start: e1002211
+    year: 2011
+    doi: 10.1371/journal.pcbi.1002211
+  - type: article
+    authors:
+      - family-names: Camsari
+        given-names: Kerem Y.
+      - family-names: Faria
+        given-names: Rafatul
+      - family-names: Sutton
+        given-names: Brian M.
+      - family-names: Datta
+        given-names: Supriyo
+    title: "Stochastic p-bits for invertible logic"
+    journal: "Physical Review X"
+    volume: 7
+    start: 031014
+    year: 2017
+    doi: 10.1103/PhysRevX.7.031014

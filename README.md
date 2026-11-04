@@ -48,26 +48,29 @@ print(sampler.counters)                # random bits, spikes, synaptic events, m
 | `NumpyNoise`, `LFSRNoise` | Software noise, and a 32 bit LFSR model of the noise a small FPGA would use |
 | `Counters` | Updates, random draws, random bits, spikes, state changes, synaptic events, dense multiply adds |
 | `exact_distribution`, `kl_divergence` | Checks against enumeration for up to 20 neurons |
+| `effective_sample_size`, `integrated_autocorrelation_time` | Mixing diagnostics, so costs are compared per independent sample |
 | `and_gate`, `max_cut`, `random_machine` | Example problems |
 
 ## First measurement
 
-`python examples/compare_cost.py --neurons 8 --sweeps 40000 --seeds 0 1 2` on one random 8 neuron machine (model seed 0) gave this table. KL is KL(empirical || exact) in nats. With 256 states and 40000 samples, finite sampling alone gives about 0.003, so every row sits near that floor.
+`python examples/compare_cost.py --neurons 8 --sweeps 40000 --seeds 0 1 2` on one random 8 neuron machine (model seed 0, weight scale 1) gave this table. KL is KL(empirical || exact) in nats. With 256 states and 40000 samples, finite sampling alone gives about 0.003, so every row sits near that floor. ESS is the effective sample size, the worst case over every neuron and the energy. Costs are per effective sample.
 
-| Sampler | KL mean | KL sd | Random bits per sweep | Synaptic events per sweep | Dense multiply adds per sweep |
+| Sampler | KL mean | ESS mean | Random bits per ESS | Synaptic events per ESS | Dense multiply adds per ESS |
 |---|---|---|---|---|---|
-| p-bit, NumPy noise | 0.00260 | 0.00034 | 256.0 | 7.87 | 56.0 |
-| p-bit, 16 bit LFSR | 0.00290 | 0.00004 | 128.0 | 7.95 | 56.0 |
-| spiking, tau 2 | 0.00293 | 0.00012 | 154.7 | 6.67 | 33.8 |
-| spiking, tau 4 | 0.00282 | 0.00023 | 104.2 | 5.27 | 22.8 |
-| spiking, tau 8 | 0.00345 | 0.00019 | 78.9 | 3.87 | 17.3 |
+| p-bit, NumPy noise (32 bit draws) | 0.00260 | 27909 | 367.1 | 11.28 | 80.3 |
+| p-bit, 16 bit LFSR | 0.00290 | 29014 | 176.5 | 10.96 | 77.2 |
+| spiking, tau 2 | 0.00293 | 18400 | 336.4 | 14.51 | 73.6 |
+| spiking, tau 4 | 0.00282 | 9675 | 430.9 | 21.80 | 94.3 |
+| spiking, tau 8 | 0.00345 | 4902 | 644.5 | 31.64 | 141.0 |
 
-At equal sweeps, the spiking sampler with tau 4 used 2.5 times fewer random bits and 2.5 times fewer multiply adds than the p-bit sampler, with KL inside the sampling floor. This is one machine and one size, so read it as a hypothesis. Event counts are not joules. A fair energy claim needs a hardware cost per event and a measure of mixing speed (effective samples per sweep), which the library does not have yet.
+Per sweep, the spiking sampler draws fewer random numbers, because a refractory neuron draws none. Per effective sample, this saving disappears. The refractory period makes consecutive samples more correlated, and at tau 4 and 8 the spiking sampler costs more than the p-bit sampler on every count. Only tau 2 is close, with 8 percent fewer random bits and multiply adds and 29 percent more synaptic events. The largest saving in this table comes from the noise source. A 16 bit LFSR halves the random bits with no measured loss of quality.
+
+This is one small machine, so these are hypotheses. Event counts are not joules. An energy claim needs a hardware cost for each kind of event.
 
 ## Plan
 
-1. Effective sample size and autocorrelation, so samplers are compared per independent sample.
-2. Larger sparse networks and a vectorised sampler.
+1. Larger sparse networks, more machines per size, and a vectorised sampler.
+2. Spiking variants that keep the per sweep saving without the extra correlation.
 3. An FPGA reference design (Tang Nano 9K) with a host script that checks the hardware samples against the exact distribution.
 4. Comparisons with other libraries on the same problems.
 

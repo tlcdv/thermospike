@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -9,6 +9,7 @@ description = "Stochastic spiking neurons that sample from Boltzmann distributio
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.10"
+authors = [{ name = "The thermospike contributors" }]
 dependencies = ["numpy>=1.24"]
 keywords = ["thermodynamic computing", "neuromorphic", "spiking neural network", "p-bit", "neural sampling", "boltzmann machine"]
 classifiers = [
@@ -16,6 +17,11 @@ classifiers = [
     "Topic :: Scientific/Engineering",
     "Intended Audience :: Science/Research",
 ]
+
+[project.urls]
+Homepage = "https://github.com/tlcdv/thermospike"
+Source = "https://github.com/tlcdv/thermospike"
+Issues = "https://github.com/tlcdv/thermospike/issues"
 
 [project.optional-dependencies]
 test = ["pytest>=7"]

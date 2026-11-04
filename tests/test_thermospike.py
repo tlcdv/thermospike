@@ -10,8 +10,10 @@ from thermospike import (
     all_states,
     and_gate,
     cut_size,
+    effective_sample_size,
     empirical_distribution,
     exact_distribution,
+    integrated_autocorrelation_time,
     kl_divergence,
     max_cut,
     random_machine,
@@ -112,6 +114,35 @@ def test_synaptic_events_follow_state_changes():
     # Dense random weights: every neuron reaches the other four.
     assert sampler.counters.synaptic_events == 4 * sampler.counters.state_changes
     assert sampler.counters.dense_multiply_adds == 4 * sampler.counters.updates
+
+
+# ------------------------------------------------------------------ mixing diagnostics
+
+
+def test_autocorrelation_time_of_independent_samples_is_one():
+    x = np.random.default_rng(0).normal(size=20000)
+    assert integrated_autocorrelation_time(x) == pytest.approx(1.0, abs=0.1)
+
+
+def test_autocorrelation_time_of_ar1_series_matches_theory():
+    # For x[t] = phi * x[t-1] + noise the time is (1 + phi) / (1 - phi) = 19 at phi = 0.9.
+    rng = np.random.default_rng(1)
+    x = np.zeros(200000)
+    for t in range(1, len(x)):
+        x[t] = 0.9 * x[t - 1] + rng.normal()
+    assert integrated_autocorrelation_time(x) == pytest.approx(19.0, rel=0.15)
+
+
+def test_constant_series_is_rejected():
+    with pytest.raises(ValueError):
+        integrated_autocorrelation_time(np.ones(100))
+
+
+def test_effective_sample_size_skips_clamped_neurons():
+    model = and_gate()
+    samples = PBitSampler(model, NumpyNoise(seed=3), clamp={2: 1}).sample(5000)
+    ess = effective_sample_size(samples, model)
+    assert 0 < ess <= 5000
 
 
 # ------------------------------------------------------------------ example problems
