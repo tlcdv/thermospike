@@ -7,6 +7,7 @@ authors:
     given-names: Cesar
     orcid: "https://orcid.org/0009-0005-9538-9390"
 version: 0.1.0
+doi: "10.5281/zenodo.23959919"
 license: MIT
 repository-code: "https://github.com/tlcdv/thermospike"
 keywords:

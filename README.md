@@ -1,5 +1,9 @@
 # thermospike
 
+[![PyPI](https://img.shields.io/pypi/v/thermospike)](https://pypi.org/project/thermospike/)
+[![tests](https://github.com/tlcdv/thermospike/actions/workflows/tests.yml/badge.svg)](https://github.com/tlcdv/thermospike/actions/workflows/tests.yml)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23959919.svg)](https://doi.org/10.5281/zenodo.23959919)
+
 Stochastic spiking neurons that sample from Boltzmann distributions. The library counts what each sample costs in random bits, synaptic events and multiply adds.
 
 thermospike sits between two fields. Thermodynamic and probabilistic computing use physical noise to sample (p-bits, Gibbs samplers). Neuromorphic engineering uses spikes and event driven synapses. Neural sampling theory (Buesing, Bill, Nessler and Maass, 2011) shows that a network of stochastic spiking neurons with a refractory period samples from the same Boltzmann distribution as a p-bit network. thermospike implements both and measures the difference in cost.
@@ -80,6 +84,10 @@ Issues and pull requests are welcome.
 
 - L. Buesing, J. Bill, B. Nessler, W. Maass. Neural Dynamics as Sampling. PLoS Computational Biology, 2011.
 - K. Y. Camsari, R. Faria, B. M. Sutton, S. Datta. Stochastic p-bits for invertible logic. Physical Review X, 2017.
+
+## Citing
+
+Cite the archived release on Zenodo, [doi:10.5281/zenodo.23959919](https://doi.org/10.5281/zenodo.23959919). This DOI always resolves to the newest version. `CITATION.cff` has the full entry.
 
 ## License
 
